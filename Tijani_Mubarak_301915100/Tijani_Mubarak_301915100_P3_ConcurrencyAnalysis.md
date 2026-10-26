@@ -199,7 +199,45 @@ result for the same key, regardless of how many times it sends the request.
 
 ---
 
-## 8. Evidence Checklist
+## 8. Automated High-Concurrency Stress Testing (`pgbench`)
+
+To complement the interactive two-session isolation tests, LSDB incorporates an automated stress-testing harness using PostgreSQL's native benchmarking engine (`pgbench`).
+
+### 8.1 Benchmark Architecture & Test Isolation
+* **Dedicated Benchmark Accounts:** 10 isolated accounts (`P3-BENCH-001` through `P3-BENCH-010`) seeded with 1,000,000.00 NGN each (Total liquidity pool: 10,000,000.00 NGN). This ensures stress testing does not alter the deterministic balances of the manual evaluation accounts (Alice, Bob, Charlie).
+* **Workload Function (`lsdb_transfer_bench`):** Executes end-to-end transfers between random benchmark accounts using deterministic ascending row-level locking (`LEAST`, `GREATEST` with `FOR UPDATE`), guarded balance verification, atomic balance updates, and balanced double-entry ledger insertion.
+* **Concurrency Configuration:** 10 concurrent client connections (`-c 10`), 2 worker threads (`-j 2`), executing 50 transactions per client (500 total concurrent transfers).
+
+### 8.2 Empirical Benchmark Output
+
+```text
+transaction type: Tijani_Mubarak_301915100_P3_pgbench_transfer.sql
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 2
+maximum number of tries: 1
+number of transactions per client: 50
+number of transactions actually processed: 500/500
+number of failed transactions: 0 (0.000%)
+latency average = 3.638 ms
+initial connection time = 11.788 ms
+tps = 2748.581732 (without initial connection time)
+```
+
+### 8.3 Post-Stress Financial Invariant & Double-Entry Audit
+
+Immediately following the execution of 500 rapid concurrent transfers, an automated three-way financial reconciliation audit verifies all safety invariants:
+
+| Audit Check | SQL Verification Invariant | Expected Outcome | Actual Observed Result | Status |
+|---|---|---|---|---|
+| **1. Pool Conservation** | `SUM(available_balance)` across benchmark accounts | Exactly `10,000,000.00 NGN` | `10,000,000.00 NGN` | **PASSED** (Zero money creation/loss) |
+| **2. Overdraft Prevention** | `COUNT(*) WHERE available_balance < 0` | Exactly `0` | `0` violations | **PASSED** (No negative balances under race) |
+| **3. Ledger Equilibrium** | `SUM(DEBIT) - SUM(CREDIT)` across all stress entries | Exactly `0.00 NGN` | `0.00 NGN` net drift | **PASSED** (Perfect mathematical balance) |
+
+---
+
+## 9. Evidence Checklist
 
 | Exercise | Script | Key result to screenshot |
 |---|---|---|
@@ -210,4 +248,6 @@ result for the same key, regardless of how many times it sends the request.
 | E — Idempotency | `P3_Idempotency.sql` steps E2–E4 | One posting count, conflict notice for TX-07 |
 | F — Concurrency race | `P3_ConcurrencyTests.sql` Part 2 | Session B FAILED or POSTED depending on balance, no overdraft |
 | G — Deadlock + safe fix | `P3_ConcurrencyTests.sql` Part 3 | Deadlock error from PostgreSQL; then clean run with ascending lock order |
+| H — pgbench Stress Test | `Tijani_Mubarak_301915100_P3_pgbench_stress_test.sh` | 10 concurrent clients, 500 txn, 0 failed, 2,748 TPS, 3-way audit PASSED |
 | Reconciliation | `P3_ConcurrencyTests.sql` Part 4 | Drift column = 0 for all P3 demo accounts |
+

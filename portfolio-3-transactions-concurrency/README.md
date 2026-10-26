@@ -35,6 +35,7 @@ contains the Portfolio 1 schema and seed data.
 | 4 | `sql/Tijani_Mubarak_301915100_P3_Reversal.sql` | Exercise D (reversal) |
 | 5 | `sql/Tijani_Mubarak_301915100_P3_Idempotency.sql` | Exercise E (idempotency) |
 | 6 | `sql/Tijani_Mubarak_301915100_P3_ConcurrencyTests.sql` | Exercises F and G (concurrency + deadlock) |
+| 7 | `scripts/Tijani_Mubarak_301915100_P3_pgbench_stress_test.sh` | Exercise H (Automated pgbench stress test: 10 clients, 500 txns, 3-way audit) |
 
 ---
 
@@ -49,6 +50,7 @@ contains the Portfolio 1 schema and seed data.
 | E | Idempotency: duplicate request returns original result; payload change rejected |
 | F | Concurrency race: SELECT FOR UPDATE prevents overdraft across two sessions |
 | G | Deadlock reproduction and safe deterministic lock-order fix |
+| H | Automated stress testing: pgbench 10 concurrent clients, 500 txns, 2,748 TPS, 3-way reconciliation audit |
 
 ---
 
@@ -101,6 +103,7 @@ Take pgAdmin screenshots of the following result sets and save them to `evidence
 | `08a_deadlock_error.png` | Exercise G — deadlock error message |
 | `08b_safe_lock_order.png` | Exercise G — safe version, no error |
 | `09_reconciliation.png` | Part 4 reconciliation (drift = 0) |
+| `Tijani_Mubarak_301915100_P3_11_pgbench_stress_test.png` | Exercise H — pgbench 10-client stress test & post-run 3-way audit |
 
 ---
 

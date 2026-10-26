@@ -98,13 +98,16 @@ PORTFOLIO 3: TRANSACTIONS AND CONCURRENCY
    - Tijani_Mubarak_301915100_P3_ConcurrencyAnalysis.md: In-depth analysis of row-level locking (SELECT FOR UPDATE), deadlock avoidance via deterministic sorting, isolation level semantics (READ COMMITTED vs REPEATABLE READ), and idempotency design.
    - Tijani_Mubarak_301915100_P3_README.md: Execution order and multi-session concurrency testing instructions.
 
-2. SQL Implementation Scripts:
+2. SQL & Stress Testing Scripts:
    - Tijani_Mubarak_301915100_P3_Setup.sql: Isolated test accounts (Alice, Bob, Charlie) and opening funding.
    - Tijani_Mubarak_301915100_P3_CommitRollback.sql: Exercise A (atomic commit) & Exercise B (mid-posting deliberate rollback).
    - Tijani_Mubarak_301915100_P3_InsufficientFunds.sql: Exercise C (overdraft guard & FAILED audit record).
    - Tijani_Mubarak_301915100_P3_Reversal.sql: Exercise D (compensating journal entries & reversal linking).
    - Tijani_Mubarak_301915100_P3_Idempotency.sql: Exercise E (duplicate retry deduplication & payload conflict).
    - Tijani_Mubarak_301915100_P3_ConcurrencyTests.sql: Exercise F & G (race conditions, non-repeatable read, deadlock reproduction and safe ascending lock order).
+   - Tijani_Mubarak_301915100_P3_pgbench_setup.sql: Dedicated benchmark accounts setup and transfer function with deterministic row-level locking.
+   - Tijani_Mubarak_301915100_P3_pgbench_transfer.sql: pgbench transaction worker script.
+   - Tijani_Mubarak_301915100_P3_pgbench_stress_test.sh: Automated multi-client stress test runner (10 concurrent clients, 500 transactions, automated 3-way audit).
 
 3. Transaction & Concurrency Visual Evidence (pgAdmin Outputs):
    - Tijani_Mubarak_301915100_P3_01_setup_opening_balances.png
@@ -135,6 +138,7 @@ PORTFOLIO 3: TRANSACTIONS AND CONCURRENCY
    - Tijani_Mubarak_301915100_P3_09c_safe_deterministic_lock_ordering.png
    - Tijani_Mubarak_301915100_P3_09e_safe_deterministic_lock_ordering_2.png
    - Tijani_Mubarak_301915100_P3_10_audit_reconciliation_zero_drift.png
+   - Tijani_Mubarak_301915100_P3_11_pgbench_stress_test.png: Automated pgbench stress test output with 10 concurrent clients, 500 txns, 0 failures, ~2,800 TPS, and 3-way reconciliation audit passed.
 
 ================================================================================
 PORTFOLIO 4: NOSQL AND ADVANCED DATA MODELS
