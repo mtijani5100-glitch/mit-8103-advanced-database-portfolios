@@ -1,0 +1,66 @@
+================================================================================
+PORTFOLIO 4: INDEX TUNING AND explain() BEFORE/AFTER MEASUREMENTS
+Target Database: ledgerspring_nosql
+================================================================================
+
+[1/5] Dropping non-primary indexes to establish COLLSCAN baseline...
+
+[2/5] Running explain() BEFORE indexes (Baseline Full Collection Scans)...
+
+[3/5] Creating strategic indexes...
+ - Created idx_cust_time on audit_events { customer_id: 1, occurred_at: -1 }
+ - Created idx_event_type_time on audit_events { event_type: 1, occurred_at: -1 }
+ - Created idx_unique_cust on kyc_profiles { customer_id: 1 } (UNIQUE)
+
+[4/5] Running explain() AFTER indexes (Index Scans)...
+
+================================================================================
+EXPLAIN() PERFORMANCE COMPARISON: BEFORE VS AFTER INDEXING
+================================================================================
+QUERY 1: Latest 20 events for customer 1001 (Equality + Sort)
+  BEFORE: Stages=[SORT -> COLLSCAN], DocsExamined=25000, Time=35ms
+  AFTER : Stages=[LIMIT -> FETCH -> IXSCAN], DocsExamined=5, KeysExamined=5, Time=21ms
+
+QUERY 2: FRAUD_FLAG events in last 7 days (Equality + Range)
+  BEFORE: Stages=[COLLSCAN], DocsExamined=25000, Time=13ms
+  AFTER : Stages=[FETCH -> IXSCAN], DocsExamined=208, KeysExamined=208, Time=4ms
+
+QUERY 3: KYC Profile point lookup for customer 2500 (Unique Key)
+  BEFORE: Stages=[COLLSCAN], DocsExamined=5000, Time=2ms
+  AFTER : Stages=[EXPRESS_IXSCAN], DocsExamined=1, KeysExamined=1, Time=1ms
+
+================================================================================
+[5/5] PROOFS: UNIQUE INDEX (CODE 11000) AND TTL AUTOMATIC EXPIRY
+================================================================================
+PASS: duplicate customer_id rejected with code 11000 (DuplicateKey)
+Created TTL index 'idx_ttl_session_1hr' on login_sessions (expireAfterSeconds: 3600)
+Inserted 1 fresh session (now) and 1 expired session (2 hours old).
+Current sessions in login_sessions:
+[
+  {
+    _id: ObjectId('6adfeefb5f434e9c267cb011'),
+    session_id: 'SESS-ACTIVE-001',
+    created_at: ISODate('2026-10-27T00:23:23.432Z')
+  },
+  {
+    _id: ObjectId('6adfeefb5f434e9c267cb012'),
+    session_id: 'SESS-EXPIRED-002',
+    created_at: ISODate('2026-10-26T22:23:23.434Z')
+  }
+]
+Note: MongoDB's background TTL thread evaluates expired documents once every 60 seconds.
+
+================================================================================
+STEP 7: STUDENT'S OWN WORK - ADVANCED PARTIAL INDEX FOR HIGH-RISK FRAUD
+================================================================================
+Created partial index 'idx_partial_high_risk_fraud' with filter { 'metadata.fraud_risk_score': { $gte: 0.70 } }
+Benefit: Only indexes high-risk events (~5% of dataset), saving 95% index memory and write overhead.
+Partial Index Explain: Stages=[FETCH -> IXSCAN], DocsExamined=3125, KeysExamined=3125
+
+--- Collection & Index Storage Statistics ---
+kyc_profiles count : 5000
+audit_events count : 25000
+login_sessions cnt : 2
+================================================================================
+INDEX TUNING COMPLETE.
+================================================================================

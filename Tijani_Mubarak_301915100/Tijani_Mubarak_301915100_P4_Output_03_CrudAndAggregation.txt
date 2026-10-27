@@ -1,0 +1,274 @@
+================================================================================
+PORTFOLIO 4: CRUD OPERATIONS AND AGGREGATION PIPELINES
+Target Database: ledgerspring_nosql
+================================================================================
+
+--------------------------------------------------------------------------------
+1. CREATE: Insert demo customer 9999 with embedded identity documents
+--------------------------------------------------------------------------------
+[Created] Ingested document with _id: 6adfee3815f48a371a36749e
+
+--------------------------------------------------------------------------------
+2. READ: Querying embedded arrays ($elemMatch & field path)
+--------------------------------------------------------------------------------
+Total customers with embedded International Passport: 1667
+
+Sample customers with passports expiring within 1 year ($elemMatch):
+[
+  {
+    _id: ObjectId('6adfee11af7258d90d00ea23'),
+    customer_id: 2,
+    tier: 'TIER_3',
+    documents: [
+      {
+        type: 'PASSPORT',
+        id_number: 'A0000002',
+        verified: true,
+        expiry_date: ISODate('2027-08-23T00:19:29.016Z')
+      }
+    ]
+  },
+  {
+    _id: ObjectId('6adfee11af7258d90d00ea26'),
+    customer_id: 5,
+    tier: 'TIER_3',
+    documents: [
+      {
+        type: 'PASSPORT',
+        id_number: 'A0000005',
+        verified: true,
+        expiry_date: ISODate('2027-08-23T00:19:29.016Z')
+      }
+    ]
+  }
+]
+
+Newest 3 audit events for customer 1:
+[
+  {
+    _id: ObjectId('6adfee11af7258d90d013841'),
+    event_id: 'EVT-2026-LSDB-115000',
+    customer_id: 1,
+    transaction_ref: 'TXN-2026-TRF-15000',
+    event_type: 'TRANSFER_POSTED',
+    amount: 1000,
+    channel: 'MOBILE_APP',
+    occurred_at: ISODate('2026-10-26T20:09:29.238Z'),
+    metadata: {
+      ip_address: '102.89.210.120',
+      fraud_risk_score: 0.01
+    }
+  },
+  {
+    _id: ObjectId('6adfee11af7258d90d011131'),
+    event_id: 'EVT-2026-LSDB-105000',
+    customer_id: 1,
+    transaction_ref: 'TXN-2026-TRF-15000',
+    event_type: 'TRANSFER_POSTED',
+    amount: 1000,
+    channel: 'MOBILE_APP',
+    occurred_at: ISODate('2026-10-06T22:56:09.144Z'),
+    metadata: {
+      ip_address: '102.89.155.210',
+      fraud_risk_score: 0.01
+    }
+  },
+  {
+    _id: ObjectId('6adfee11af7258d90d014bc9'),
+    event_id: 'EVT-2026-LSDB-120000',
+    customer_id: 1,
+    transaction_ref: 'TXN-2026-TRF-10000',
+    event_type: 'TRANSFER_POSTED',
+    amount: 1000,
+    channel: 'MOBILE_APP',
+    occurred_at: ISODate('2026-10-06T18:46:09.284Z'),
+    metadata: {
+      ip_address: '102.89.110.75',
+      fraud_risk_score: 0.01
+    }
+  }
+]
+
+--------------------------------------------------------------------------------
+3. UPDATE: $set tier upgrade and $push new document (append-only audit trail)
+--------------------------------------------------------------------------------
+[Updated] Customer 9999 upgraded to TIER_3. Total documents: 3
+{
+  _id: ObjectId('6adfee3815f48a371a36749e'),
+  customer_id: 9999,
+  tier: 'TIER_3',
+  status: 'ACTIVE',
+  created_at: ISODate('2026-10-27T00:20:08.500Z'),
+  documents: [
+    {
+      type: 'BVN',
+      id_number: '22199990001',
+      verified: true
+    },
+    {
+      type: 'NIN',
+      id_number: '10999900001',
+      verified: false
+    },
+    {
+      type: 'DRIVERS_LICENSE',
+      id_number: 'DL-LAG-2026-9901',
+      verified: true,
+      expiry_date: ISODate('2028-10-26T00:20:08.549Z')
+    }
+  ],
+  updated_at: ISODate('2026-10-27T00:20:08.549Z')
+}
+
+--------------------------------------------------------------------------------
+4. DELETE: Clean up demo customer 9999
+--------------------------------------------------------------------------------
+[Deleted] Removed demo record (deletedCount: 1). Cleanup complete.
+
+================================================================================
+AGGREGATION PIPELINE 1: Event distribution in the last 30 days
+Stages: $match (last 30 days) -> $group (by event_type) -> $sort (descending)
+================================================================================
+[
+  {
+    _id: 'LOGIN_SUCCESS',
+    event_count: 3336,
+    total_volume_ngn: 0
+  },
+  {
+    _id: 'TRANSFER_POSTED',
+    event_count: 3335,
+    total_volume_ngn: 209494000
+  },
+  {
+    _id: 'TRANSFER_FAILED',
+    event_count: 1460,
+    total_volume_ngn: 92510000
+  },
+  {
+    _id: 'TRANSFER_INITIATED',
+    event_count: 1460,
+    total_volume_ngn: 92145000
+  },
+  {
+    _id: 'LOGIN_FAILED',
+    event_count: 1459,
+    total_volume_ngn: 0
+  },
+  {
+    _id: 'FRAUD_FLAG',
+    event_count: 1459,
+    total_volume_ngn: 0
+  }
+]
+
+================================================================================
+AGGREGATION PIPELINE 2: Daily transfer initiation volume ($dateToString)
+Stages: $match (TRANSFER_POSTED) -> $group ($dateToString by day) -> $sort
+================================================================================
+[
+  {
+    _id: '2026-10-27',
+    daily_transfer_count: 9,
+    daily_total_turnover_ngn: 609000
+  },
+  {
+    _id: '2026-10-26',
+    daily_transfer_count: 209,
+    daily_total_turnover_ngn: 12791500
+  },
+  {
+    _id: '2026-10-25',
+    daily_transfer_count: 199,
+    daily_total_turnover_ngn: 12228750
+  },
+  {
+    _id: '2026-10-23',
+    daily_transfer_count: 10,
+    daily_total_turnover_ngn: 520000
+  },
+  {
+    _id: '2026-10-22',
+    daily_transfer_count: 208,
+    daily_total_turnover_ngn: 12878500
+  },
+  {
+    _id: '2026-10-21',
+    daily_transfer_count: 198,
+    daily_total_turnover_ngn: 12405500
+  },
+  {
+    _id: '2026-10-19',
+    daily_transfer_count: 10,
+    daily_total_turnover_ngn: 630000
+  }
+]
+
+================================================================================
+AGGREGATION PIPELINE 3: Top 5 customers by failed logins joined to KYC tier ($lookup)
+Stages: $match (LOGIN_FAILED) -> $group -> $sort -> $limit(5) -> $lookup -> $unwind
+================================================================================
+[
+  {
+    _id: 4135,
+    failed_login_attempts: 5,
+    customer_id: 4135,
+    customer_tier: 'TIER_2',
+    account_status: 'ACTIVE',
+    documents_count: 2
+  },
+  {
+    _id: 4735,
+    failed_login_attempts: 5,
+    customer_id: 4735,
+    customer_tier: 'TIER_2',
+    account_status: 'ACTIVE',
+    documents_count: 2
+  },
+  {
+    _id: 159,
+    failed_login_attempts: 5,
+    customer_id: 159,
+    customer_tier: 'TIER_1',
+    account_status: 'SUSPENDED',
+    documents_count: 1
+  },
+  {
+    _id: 1335,
+    failed_login_attempts: 5,
+    customer_id: 1335,
+    customer_tier: 'TIER_1',
+    account_status: 'ACTIVE',
+    documents_count: 1
+  },
+  {
+    _id: 1703,
+    failed_login_attempts: 5,
+    customer_id: 1703,
+    customer_tier: 'TIER_3',
+    account_status: 'PENDING_VERIFICATION',
+    documents_count: 3
+  }
+]
+
+================================================================================
+AGGREGATION PIPELINE 4: Average document count per KYC tier using $size
+Stages: $project ($size of documents) -> $group (by tier, $avg) -> $sort
+================================================================================
+[
+  {
+    _id: 'TIER_1',
+    total_profiles: 1666,
+    average_documents_per_customer: 1
+  },
+  {
+    _id: 'TIER_2',
+    total_profiles: 1667,
+    average_documents_per_customer: 2
+  },
+  {
+    _id: 'TIER_3',
+    total_profiles: 1667,
+    average_documents_per_customer: 3
+  }
+]

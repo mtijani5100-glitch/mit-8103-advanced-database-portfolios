@@ -148,21 +148,32 @@ PORTFOLIO 4: NOSQL AND ADVANCED DATA MODELS
    - Tijani_Mubarak_301915100_P4_SQLvsNoSQLRationale.md: Comparative matrix, authoritative balance vs event projections, CAP/PACELC theorem evaluation, and Transactional Outbox Pattern design.
    - Tijani_Mubarak_301915100_P4_README.md: Execution guide and screenshot runbook for mongosh and Node.js test runners.
 
-2. Seed Dataset & Execution Scripts:
-   - Tijani_Mubarak_301915100_P4_Events_Seed.json: 20 synthetic Nigerian fintech transaction events with polymorphic metadata.
-   - Tijani_Mubarak_301915100_P4_01_SetupCollection.js: MongoDB collection creation with $jsonSchema validation and 5 strategic indexes.
-   - Tijani_Mubarak_301915100_P4_02_SeedEvents.js: Document ingestion script with BSON types.
-   - Tijani_Mubarak_301915100_P4_03_QueriesAndAggregations.js: Queries (Q1-Q3) and Aggregation Pipelines (Agg1-Agg3) for customer feeds, lifecycle lookups, failure distribution, channel turnover, and fraud detection.
-   - Tijani_Mubarak_301915100_P4_04_OutboxPattern.js: Transactional outbox idempotent upsert consumer simulation.
-   - Tijani_Mubarak_301915100_P4_RunLab.js: Standalone zero-dependency Node.js execution engine.
+151: 2. Seed Dataset, Rubric Scripts & Log Outputs:
+152:    - Tijani_Mubarak_301915100_P4_Events_Seed.json: 20 synthetic Nigerian fintech transaction events with polymorphic metadata.
+153:    - Tijani_Mubarak_301915100_P4_01_SchemaValidation.js: MongoDB schema validation for 3 collections (kyc_profiles, audit_events, login_sessions) with deliberate code 121 rejection.
+154:    - Tijani_Mubarak_301915100_P4_02_SeedData.js: Document ingestion script seeding 5,000 KYC profiles and 25,000 audit events.
+155:    - Tijani_Mubarak_301915100_P4_03_CrudAndAggregation.js: CRUD operations ($elemMatch, $set/$push, delete) and 4 aggregations including $lookup and $size.
+156:    - Tijani_Mubarak_301915100_P4_04_IndexesExplain.js: Index tuning, before/after explain() measurements, unique index code 11000 proof, TTL index, and partial index.
+157:    - Tijani_Mubarak_301915100_P4_Output_03_CrudAndAggregation.txt: Execution log output of CRUD operations and 4 aggregation pipelines.
+158:    - Tijani_Mubarak_301915100_P4_Output_04_IndexesExplain.txt: Execution log output of before/after explain() performance metrics and constraint proofs.
+159:    - Tijani_Mubarak_301915100_P4_01_SetupCollection.js: MongoDB collection creation with $jsonSchema validation and 5 strategic indexes.
+160:    - Tijani_Mubarak_301915100_P4_02_SeedEvents.js: Document ingestion script with BSON types.
+161:    - Tijani_Mubarak_301915100_P4_03_QueriesAndAggregations.js: Queries (Q1-Q3) and Aggregation Pipelines (Agg1-Agg3) for customer feeds, lifecycle lookups, failure distribution, channel turnover, and fraud detection.
+162:    - Tijani_Mubarak_301915100_P4_04_OutboxPattern.js: Transactional outbox idempotent upsert consumer simulation.
+163:    - Tijani_Mubarak_301915100_P4_RunLab.js: Standalone zero-dependency Node.js execution engine.
+164: 
+165: 3. Visual Execution Evidence:
+166:    - Tijani_Mubarak_301915100_P4_01_schema_validation.png: Proof of 3 collections initialized and deliberate bad insert rejected with code 121.
+167:    - Tijani_Mubarak_301915100_P4_02_seed_verification.png: Terminal verification showing 5,000 KYC profiles and 25,000 audit events ingested.
+168:    - Tijani_Mubarak_301915100_P4_03_crud_output.png: Execution of CREATE, READ ($elemMatch), UPDATE ($set/$push), and DELETE operations.
+169:    - Tijani_Mubarak_301915100_P4_08_compass_indexes.png: MongoDB Compass GUI showing compound indexes and idx_partial_high_risk_fraud partial index.
+170:    - Tijani_Mubarak_301915100_P4_01_Schema_and_Indexes.png: Schema validator and index creation output.
+171:    - Tijani_Mubarak_301915100_P4_02_Seed_Documents_Ingested.png: Ingestion confirmation for 20 event documents.
+172:    - Tijani_Mubarak_301915100_P4_03_Query_Customer_Activity.png: Paginated customer activity feed using idx_customer_timeline.
+173:    - Tijani_Mubarak_301915100_P4_04_Query_Lifecycle_Lookup.png: Point lookup by transaction_ref showing full lifecycle progression.
+174:    - Tijani_Mubarak_301915100_P4_05_Query_Failed_Diagnostics.png: Diagnostic filter for failed transfers displaying error codes.
+175:    - Tijani_Mubarak_301915100_P4_06_Agg_Failure_Distribution.png: Aggregation pipeline grouping failed volume by reason and channel (also available as _06c_).
+176:    - Tijani_Mubarak_301915100_P4_07_Agg_Channel_Turnover.png: Multi-channel volume, total turnover, and average latency breakdown (stages _07a_, _07b_, _07c_).
+177:    - Tijani_Mubarak_301915100_P4_08_Agg_Fraud_Security.png: Fraud detection flagging risk scores >= 0.70 and impossible travel anomaly.
+178:    - Tijani_Mubarak_301915100_P4_09_Outbox_Idempotent_Replay.png: Outbox pattern duplicate delivery rejection proof.
 
-3. Visual Execution Evidence:
-   - Tijani_Mubarak_301915100_P4_01_Schema_and_Indexes.png: Schema validator and index creation output.
-   - Tijani_Mubarak_301915100_P4_02_Seed_Documents_Ingested.png: Ingestion confirmation for 20 event documents.
-   - Tijani_Mubarak_301915100_P4_03_Query_Customer_Activity.png: Paginated customer activity feed using idx_customer_timeline.
-   - Tijani_Mubarak_301915100_P4_04_Query_Lifecycle_Lookup.png: Point lookup by transaction_ref showing full lifecycle progression.
-   - Tijani_Mubarak_301915100_P4_05_Query_Failed_Diagnostics.png: Diagnostic filter for failed transfers displaying error codes.
-   - Tijani_Mubarak_301915100_P4_06_Agg_Failure_Distribution.png: Aggregation pipeline grouping failed volume by reason and channel (also available as _06c_).
-   - Tijani_Mubarak_301915100_P4_07_Agg_Channel_Turnover.png: Multi-channel volume, total turnover, and average latency breakdown (stages _07a_, _07b_, _07c_).
-   - Tijani_Mubarak_301915100_P4_08_Agg_Fraud_Security.png: Fraud detection flagging risk scores >= 0.70 and impossible travel anomaly.
-   - Tijani_Mubarak_301915100_P4_09_Outbox_Idempotent_Replay.png: Outbox pattern duplicate delivery rejection proof.
