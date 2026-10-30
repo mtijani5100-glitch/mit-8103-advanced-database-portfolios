@@ -1,0 +1,58 @@
+INSERT 0 12
+INSERT 0 18
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ account_number |     full_name     | account_type | cached_balance | ledger_derived_balance | discrepancy 
+----------------+-------------------+--------------+----------------+------------------------+-------------
+ 1000000001     | Amaka Okonkwo     | SAVINGS      |      470000.00 |              470000.00 |        0.00
+ 1000000002     | Amaka Okonkwo     | CURRENT      |           0.00 |                   0.00 |        0.00
+ 2000000001     | Chukwudi Eze      | SAVINGS      |     2370000.00 |             2370000.00 |        0.00
+ 2000000002     | Chukwudi Eze      | CURRENT      |     1000000.00 |             1000000.00 |        0.00
+ 3000000001     | Funmilayo Adeyemi | CURRENT      |      925000.00 |              925000.00 |        0.00
+ 4000000001     | Emeka Nwosu       | SAVINGS      |      950000.00 |              950000.00 |        0.00
+ 5000000001     | Blessing Okafor   | SAVINGS      |      150000.00 |              150000.00 |        0.00
+ 6000000001     | Tunde Bankole     | SAVINGS      |     1570000.00 |             1570000.00 |        0.00
+ 6000000002     | Tunde Bankole     | CURRENT      |       50000.00 |               50000.00 |        0.00
+ 7000000001     | Ibrahim Danjuma   | CURRENT      |     1330000.00 |             1330000.00 |        0.00
+ 8000000001     | Zainab Abubakar   | SAVINGS      |      450000.00 |              450000.00 |        0.00
+ 9000000001     | Tamuno Briggs     | CURRENT      |     2875000.00 |             2875000.00 |        0.00
+ 9100000001     | Osahon Igbinedion | SAVINGS      |      960000.00 |              960000.00 |        0.00
+ 9200000001     | Aisha Mohammed    | CURRENT      |      920000.00 |              920000.00 |        0.00
+ 9300000001     | Babatunde Adeleke | CURRENT      |     1800000.00 |             1800000.00 |        0.00
+(15 rows)
+

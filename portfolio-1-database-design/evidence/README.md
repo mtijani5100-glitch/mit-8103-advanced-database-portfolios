@@ -32,10 +32,12 @@ psql -d lsdb_dev -f sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql
 | [`sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql`](sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql) | 11 named tests demonstrating database rule enforcement |
 | [`relational-schema.md`](relational-schema.md) | Full data dictionary with column types, keys, and FK map |
 | [`normalisation.md`](normalisation.md) | 1NF → BCNF analysis tied to the actual schema |
-| [`../docs/decisions/case-study.md`](../docs/decisions/case-study.md) | Case study description |
-| [`../docs/business-rules.md`](../docs/business-rules.md) | 29 numbered business rules |
-| [`../diagrams/Tijani_Mubarak_301915100_ERD_v2.drawio`](../diagrams/Tijani_Mubarak_301915100_ERD_v2.drawio) | Editable ERD source (diagrams.net) |
-| [`evidence/`](evidence/) | Screenshots and query outputs |
+| [`../case-study.md`](../case-study.md) | Detailed case study description for LedgerSpring Digital Bank |
+| [`edge-case-test-matrix.md`](edge-case-test-matrix.md) | Comprehensive 11-scenario edge-case and constraint verification matrix |
+| [`../diagrams/Tijani_Mubarak_301915100_ERD_v2.png`](../diagrams/Tijani_Mubarak_301915100_ERD_v2.png) | Rendered visual ER diagram export (PNG) |
+| [`../diagrams/Tijani_Mubarak_301915100_ERD_v2.drawio`](../diagrams/Tijani_Mubarak_301915100_ERD_v2.drawio) | Editable ERD source model (diagrams.net / draw.io) |
+| [`../docs/business-rules.md`](../../docs/business-rules.md) | 29 numbered core banking business rules |
+| [`evidence/`](./) | 10 verified terminal screenshots showing clean reset, schema creation, seed ingestion, and constraint passes |
 
 ---
 

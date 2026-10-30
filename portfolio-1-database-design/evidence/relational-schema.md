@@ -8,6 +8,8 @@
 
 ## 1. Entity Summary and Relationships
 
+> **Visual Diagram Export:** A high-resolution rendered diagram is available at [`../diagrams/Tijani_Mubarak_301915100_ERD_v2.png`](../diagrams/Tijani_Mubarak_301915100_ERD_v2.png) (editable draw.io model at [`../diagrams/Tijani_Mubarak_301915100_ERD_v2.drawio`](../diagrams/Tijani_Mubarak_301915100_ERD_v2.drawio)).
+
 ```mermaid
 erDiagram
     CUSTOMERS ||--o{ ACCOUNTS : "owns (customer accounts)"

@@ -10,11 +10,13 @@ GitHub Repository: https://github.com/mtijani5100-glitch/mit-8103-advanced-datab
 ================================================================================
 SUBMISSION OVERVIEW
 ================================================================================
-This submission folder contains the deliverables and empirical evidence for:
+This submission folder contains the complete deliverables and empirical evidence for:
 - Portfolio 1: Database Design and Modelling (7 Marks)
 - Portfolio 2: Query Processing and Optimisation (7 Marks)
 - Portfolio 3: Transactions and Concurrency (7 Marks)
 - Portfolio 4: NoSQL and Advanced Data Models (7 Marks)
+- Portfolio 5: Distributed and Cloud Databases (6 Marks)
+- Final Submission Deliverables: Executive Summary Synthesis Report, Academic AI Declaration, and Bibliography
 
 All files follow the required naming format: Surname_Firstname_StudentID_DocumentType
 No spaces are used in any file or folder names.
@@ -39,6 +41,10 @@ PORTFOLIO 1: DATABASE DESIGN AND MODELLING
    - Tijani_Mubarak_301915100_P1_SeedData.sql: Synthetic seed dataset with atomic deposit transactions.
    - Tijani_Mubarak_301915100_P1_ConstraintTests.sql: 11 PL/pgSQL constraint assertion test blocks.
    - Tijani_Mubarak_301915100_P1_EdgeCaseTestMatrix.md: Documented matrix of the 11 edge cases (all PASS).
+   - Tijani_Mubarak_301915100_P1_Output_01_Reset.txt: Terminal output confirming clean database teardown.
+   - Tijani_Mubarak_301915100_P1_Output_02_CreateSchema.txt: Terminal output confirming successful schema DDL build.
+   - Tijani_Mubarak_301915100_P1_Output_03_SeedData.txt: Terminal output confirming synthetic seed ingestion.
+   - Tijani_Mubarak_301915100_P1_Output_04_Constraints.txt: Terminal output showing all 11 PL/pgSQL constraint assertions PASS.
 
 4. Visual Execution Evidence:
    - Tijani_Mubarak_301915100_P1_Evidence_01_CustomerTable.png
@@ -217,4 +223,13 @@ PORTFOLIO 5: DISTRIBUTED AND CLOUD DATABASE EXERCISE
    - Tijani_Mubarak_301915100_P5_10_failover.png: Manual failover drill promoting replica via pg_promote(), sequence jump, and accepting writes.
    - Tijani_Mubarak_301915100_P5_11_own_work.png: Student's own work showing lag-aware router overdraft prevention and 100% DR restore reconciliation.
 
+================================================================================
+FINAL SUBMISSION DELIVERABLES & ACADEMIC DECLARATIONS
+================================================================================
+1. Executive Synthesis Report:
+   - Tijani_Mubarak_301915100_Final_Report.md: Comprehensive 2-3 page executive summary and engineering synthesis for LMS submission covering all 5 portfolios.
+
+2. Academic Integrity & Bibliography:
+   - Tijani_Mubarak_301915100_AI_Use_Declaration.md: Transparent, auditable declaration of Generative AI assistance and independent verification.
+   - Tijani_Mubarak_301915100_References.md: Comprehensive academic bibliography, regulatory citations, and industry engineering standards.
 

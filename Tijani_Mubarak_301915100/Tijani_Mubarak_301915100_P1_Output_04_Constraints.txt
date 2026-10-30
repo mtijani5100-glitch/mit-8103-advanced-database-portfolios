@@ -1,0 +1,33 @@
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:16: NOTICE:  PASS: unique constraint rejected duplicate account number.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:29: NOTICE:  PASS: FK constraint rejected non-existent customer_id.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:42: NOTICE:  PASS: check constraint rejected CUSTOMER account with NULL customer_id.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:57: NOTICE:  PASS: check constraint rejected SETTLEMENT account with customer_id.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:76: NOTICE:  PASS: check constraint rejected zero amount transaction.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:92: NOTICE:  PASS: check constraint rejected same-account transfer.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:111: NOTICE:  PASS: unique constraint rejected duplicate transaction_ref.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:134: NOTICE:  PASS: unique constraint rejected second reversal of the same transaction.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:152: NOTICE:  PASS: check constraint rejected zero-amount ledger entry.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:164: NOTICE:  PASS: unique constraint rejected duplicate idempotency scope/key.
+DO
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:195: NOTICE:  PASS: valid reversal row accepted (transaction_id=37). Rolling back.
+psql:portfolio-1-database-design/sql/Tijani_Mubarak_301915100_P1_ConstraintTests.sql:195: NOTICE:  INFO: test transaction rolled back — seed data unchanged.
+DO
+    table_name    | row_count 
+------------------+-----------
+ accounts         |        18
+ audit_logs       |         7
+ customers        |        12
+ idempotency_keys |         5
+ ledger_entries   |        60
+ transactions     |        32
+(6 rows)
+
