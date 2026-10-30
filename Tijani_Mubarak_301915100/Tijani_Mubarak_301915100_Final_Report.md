@@ -20,6 +20,16 @@ Modern retail banking engines operate under non-negotiable operational requireme
 
 Operating entirely on synthetic data, LSDB strictly enforces Nigerian regulatory standards (Central Bank of Nigeria Guidelines on Electronic Operations, 10-digit NUBAN account numbering, and integer kobo monetary precision). Rather than treating databases as passive bit stores, LSDB leverages the relational storage engine (PostgreSQL 16) as an active defense barrier that makes invalid financial states mathematically impossible. Across five progressive portfolio milestones, this project delivers a fully validated, production-grade database architecture that bridges classical relational theory with modern distributed and polyglot paradigms.
 
+### 1.1 Formal Organisation & Case Study Statement (Per LMS Requirements)
+
+| Required Dimension | Project Specification |
+|---|---|
+| **Organisation Name** | **LedgerSpring Digital Bank (LSDB)** |
+| **Nature of Business / System** | Fictional Nigerian Digital Retail Bank & Real-Time Double-Entry Clearing Platform (Fintech). |
+| **Database Users** | 1. **Retail Customers:** Open accounts, initiate peer-to-peer transfers, inspect history.<br>2. **Operations Staff:** Triage pending/failed queues, execute authorized compensating reversals.<br>3. **Compliance & Auditors:** Inspect immutable journals, reconcile balances against ledger lines.<br>4. **Database Administrators (DBAs):** Manage streaming replication, failovers, partitioning, and backups.<br>5. **Background Microservices:** Process asynchronous transactional outbox CDC events and reconciliation jobs. |
+| **Major Data Stored** | Customer identities & KYC tiers, polymorphic accounts (Customer vs Settlement/Suspense), cached available balances, transaction requests, immutable double-entry ledger journals, SHA-256 idempotency keys, operational audit logs, and NoSQL operational event projections. |
+| **Key Operations Supported** | Atomic multi-row transfers, balance solvency checks, balanced dual ledger entries ($\sum \text{Debits} = \sum \text{Credits}$), compensating single reversals, idempotent retries, analytical aggregations, partition pruning, and lag-aware read routing. |
+
 ```
                               ┌──────────────────────────────────────────────┐
                               │            Client API Gateway / Mobile       │
@@ -191,7 +201,45 @@ While LedgerSpring Digital Bank provides an enterprise-grade academic foundation
 
 ---
 
-## 9. Conclusion
+## 9. Individual Technical Reflection (Rubric Section 8 & 12)
+
+### 9.1 Key Architectural Design Choices
+1. **Engine-Level Defense vs. Application Logic:** In financial systems, application code is transient and prone to race conditions. Embedding constraints directly into the PostgreSQL storage engine (check constraints, unique partial indexes, foreign keys) guarantees mathematical consistency regardless of client errors.
+2. **Intentional Denormalisation with Ledger Invariance:** While strict normalization dictates computing balances on the fly from journal lines, retail banking latency budgets require sub-millisecond pre-flight checks. Caching `accounts.available_balance` while treating `ledger_entries` as the immutable source of truth strikes the optimal balance between read performance and financial auditability.
+3. **Deterministic Concurrency Over Optimistic Retries:** Under high-velocity transfers, optimistic concurrency leads to high abort rates. Enforcing deterministic row locking via `LEAST`/`GREATEST` eliminated deadlock states entirely without relying on costly rollback-and-retry cascades.
+
+### 9.2 Technical Challenges Faced & Engineering Solutions
+- **Replication Privileges in Alpine Linux:** Containerizing PostgreSQL standby nodes revealed strict security controls prohibiting `postgres` execution as root. Resolved by mastering Alpine user-namespace mapping and invoking `gosu postgres` with explicit ownership controls.
+- **Synchronous Replication Deadlocks:** Testing `synchronous_standby_names` revealed the stark reality of the CAP theorem when standby disconnects froze the primary on `IPC / SyncRep`. This necessitated configuring intelligent failover timeouts and designing the lag-aware application router.
+- **Polyglot Dual-Write Hazards:** Mitigated data divergence between PostgreSQL and MongoDB by implementing the Transactional Outbox Pattern with idempotent upsert consumers (`$setOnInsert`).
+
+### 9.3 Key Lessons Learned
+- Real-world database performance is governed by shared buffer pool management and disk page access patterns; targeted partial and composite indexes produce orders-of-magnitude greater impact than raw hardware scaling.
+- In distributed topologies, eventual consistency is not merely a theoretical concept—it introduces tangible financial double-spending risks that must be actively guarded with LSN-based read routing.
+
+---
+
+## 10. Academic Integrity & AI Assistance Declaration (Rubric Section 11)
+
+In compliance with Miva Open University guidelines, generative AI (Google DeepMind Antigravity IDE / Gemini 2.5 Pro) was utilized as an interactive pair-programming companion. 
+- **What AI was used for:** Scaffolding boilerplate DDL, generating synthetic Nigerian seed data, formatting test assertion harnesses, drafting initial Docker Compose declarations, and formatting markdown tables.
+- **Student Verification & Intellectual Ownership:** Every database migration, index structure, locking order, and shell script was independently reviewed, executed in live terminal environments, debugged against runtime engine errors (e.g., catalog mismatches, root permissions, SyncRep hangs), and validated for domain accuracy. Full disclosure is provided in [`docs/ai-use-declaration.md`](ai-use-declaration.md).
+
+---
+
+## 11. Key Academic & Regulatory References (Rubric Section 12)
+
+- **Codd, E. F. (1970).** A Relational Model of Data for Large Shared Data Banks. *CACM*, 13(6).
+- **Gray, J., & Reuter, A. (1993).** *Transaction Processing: Concepts and Techniques*. Morgan Kaufmann.
+- **Brewer, E. A. (2000).** Towards Robust Distributed Systems. *ACM PODC*.
+- **PostgreSQL Global Development Group. (2024).** *PostgreSQL 16.13 Documentation*.
+- **MongoDB, Inc. (2024).** *MongoDB Server Manual (v7.0)*.
+- **Central Bank of Nigeria (CBN). (2011/2020).** *Standards on NUBAN Scheme & Regulatory Guidelines on Electronic Operations*.
+- *(Full bibliography containing 19 authoritative citations available in [`references/references.md`](../references/references.md)).*
+
+---
+
+## 12. Conclusion
 
 The LedgerSpring Digital Bank portfolio represents a comprehensive, methodically engineered implementation of modern database theory. By combining strict relational mathematical invariants, meticulous query plan tuning, deterministic concurrency controls, polyglot document streaming, and distributed streaming replication, LSDB demonstrates that financial software reliability is fundamentally an engineering discipline grounded in deep database internals.
 
