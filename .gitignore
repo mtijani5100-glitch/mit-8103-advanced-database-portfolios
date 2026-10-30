@@ -19,4 +19,5 @@ postgres-data/
 ledgerspring_dump.sql
 
 # Editor and operating system artifacts
-.idea/*.zip
+.idea/
+*.zip
