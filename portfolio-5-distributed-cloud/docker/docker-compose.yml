@@ -1,0 +1,96 @@
+# Portfolio 5: Distributed Multi-Node Topology
+# LedgerSpring Digital Bank (LSDB)
+# Student: Mubarak Tijani | ID: 301915100
+
+version: '3.8'
+
+services:
+  # 1. Authoritative Primary Node (Writer / ACID System of Record)
+  postgres-primary:
+    image: postgres:16-alpine
+    container_name: lsdb-postgres-primary
+    environment:
+      POSTGRES_DB: ledgerspring
+      POSTGRES_USER: lsdb_admin
+      POSTGRES_PASSWORD: lsdb_secure_password_2026
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    command: >
+      postgres 
+      -c wal_level=replica 
+      -c max_wal_senders=10 
+      -c max_replication_slots=10 
+      -c hot_standby=on 
+      -c logging_collector=on 
+      -c log_min_messages=warning
+    ports:
+      - "5432:5432"
+    volumes:
+      - primary_data:/var/lib/postgresql/data
+      - ../sql/Tijani_Mubarak_301915100_P5_PartitioningDemo.sql:/docker-entrypoint-initdb.d/01_partitioning.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lsdb_admin -d ledgerspring"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lsdb-banking-net
+
+  # 2. Read-Only Standby Replica (Analytical & Statement Queries)
+  postgres-replica:
+    image: postgres:16-alpine
+    container_name: lsdb-postgres-replica
+    environment:
+      POSTGRES_USER: lsdb_admin
+      POSTGRES_PASSWORD: lsdb_secure_password_2026
+      PGUSER: lsdb_admin
+      PGPASSWORD: lsdb_secure_password_2026
+    ports:
+      - "5433:5432"
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    command: >
+      sh -c "
+      until pg_isready -h postgres-primary -p 5432 -U lsdb_admin; do echo waiting for primary; sleep 2; done;
+      if [ ! -s /var/lib/postgresql/data/PG_VERSION ]; then
+        PGPASSWORD=lsdb_secure_password_2026 pg_basebackup -h postgres-primary -p 5432 -U lsdb_admin -D /var/lib/postgresql/data -Fp -Xs -R;
+      fi;
+      exec postgres -c hot_standby=on
+      "
+    volumes:
+      - replica_data:/var/lib/postgresql/data
+    networks:
+      - lsdb-banking-net
+
+  # 3. Document Store Cluster (Event Telemetry & Fraud Projections)
+  mongodb-eventstore:
+    image: mongo:7.0
+    container_name: lsdb-mongo-eventstore
+    environment:
+      MONGO_INITDB_DATABASE: lsdb_events
+    ports:
+      - "27017:27017"
+    command: ["mongod", "--bind_ip_all"]
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lsdb-banking-net
+
+volumes:
+  primary_data:
+    name: lsdb_primary_volume
+  replica_data:
+    name: lsdb_replica_volume
+  mongo_data:
+    name: lsdb_mongo_volume
+
+networks:
+  lsdb-banking-net:
+    name: lsdb_banking_network
+    driver: bridge

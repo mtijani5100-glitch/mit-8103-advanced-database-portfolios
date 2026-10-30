@@ -14,6 +14,9 @@ __pycache__/
 
 # Local database storage
 postgres-data/
+*.dump
+*.dump.sql
+ledgerspring_dump.sql
 
 # Editor and operating system artifacts
 .idea/

@@ -1,0 +1,68 @@
+%% Portfolio 5: Distributed and Cloud Database Architecture
+%% LedgerSpring Digital Bank (LSDB)
+%% Student: Mubarak Tijani | ID: 301915100
+
+graph TB
+    subgraph Clients["Client Access Channels"]
+        direction TB
+        Mobile["LSDB Mobile App (iOS / Android)"]
+        Web["Internet Banking Web Portal"]
+        USSD["Telco USSD Gateway (*999#)"]
+        NIP["NIBSS Instant Payment (NIP Switch)"]
+    end
+
+    subgraph GatewayTier["API Gateway & Connection Routing Tier"]
+        direction TB
+        LB["Cloud Load Balancer (HTTPS / TLS 1.3)"]
+        APIGateway["LSDB Core Banking API Gateway"]
+        Router["Database Connection Router\n(Read / Write Splitter)"]
+    end
+
+    subgraph RelationalCore["Authoritative Relational Core (PostgreSQL 16)"]
+        direction TB
+        subgraph PrimaryNode["Primary Database Node (Writer / CP)"]
+            PG_Primary["PostgreSQL Primary (us-east-1a)\n- ACID Core Ledger\n- Accounts & Customers\n- Idempotency Keys\n- Transactional Outbox"]
+            WAL_Writer["WAL (Write-Ahead Log) Engine"]
+        end
+
+        subgraph ReplicaNode["Read-Only Replica Standby (Reader / AP)"]
+            PG_Replica["PostgreSQL Read Replica (us-east-1b)\n- Account Statement Lookups\n- Regulatory Monthly Reports\n- Back-office Audits"]
+            WAL_Receiver["WAL Receiver & Replay Engine"]
+        end
+    end
+
+    subgraph EventStreamTier["Event Projection & Analytics Tier (MongoDB 7.0)"]
+        direction TB
+        OutboxWorker["Outbox Dispatcher / CDC Worker\n(At-Least-Once Delivery)"]
+        MongoCluster["MongoDB Event Store Cluster\n- transaction_events Collection\n- Device Telemetry & Geolocation\n- Fraud Pattern Aggregations\n- Customer Timeline Feeds"]
+    end
+
+    subgraph StorageRecovery["Disaster Recovery & Observability"]
+        direction TB
+        ObjectStorage["Encrypted Object Storage (S3 / Cloud Storage)\n- Continuous WAL Archives\n- Nightly Physical Base Backups\n- PITR Point-in-Time Recovery"]
+        Monitoring["Prometheus & Grafana Monitoring\n- Replication Lag Alerting\n- Deadlock & Lock Wait Detection\n- Double-Entry Drift Alarms"]
+    end
+
+    %% Client to Gateway
+    Mobile --> LB
+    Web --> LB
+    USSD --> LB
+    NIP --> LB
+    LB --> APIGateway
+    APIGateway --> Router
+
+    %% Router to DB
+    Router -- "Write Transfers & Balance Checks\n(port 5432 - Writer Pool)" --> PG_Primary
+    Router -- "Historical Statements & Reporting\n(port 5433 - Reader Pool)" --> PG_Replica
+
+    %% Replication
+    WAL_Writer -- "Asynchronous Physical Streaming Replication\n(WAL Sender -> Receiver)" --> WAL_Receiver
+
+    %% Outbox to Mongo
+    PG_Primary -- "Polls unpublished outbox_events" --> OutboxWorker
+    OutboxWorker -- "Idempotent Upsert (unique event_id)" --> MongoCluster
+
+    %% Backups & Monitoring
+    PG_Primary -. "Archive WAL Segments (archive_command)" .-> ObjectStorage
+    PG_Primary -. "pg_stat_replication / locks" .-> Monitoring
+    PG_Replica -. "pg_last_xact_replay_timestamp()" .-> Monitoring

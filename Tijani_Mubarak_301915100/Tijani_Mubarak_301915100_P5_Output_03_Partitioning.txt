@@ -1,0 +1,75 @@
+================================================================================
+STEP 7: SHARDING SIMULATION VIA HASH PARTITIONING ON ACCOUNT_ID
+================================================================================
+--- 1. Provisioning 4 Hash Shards (ledger_shard_0 to ledger_shard_3) ---
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+--- 2. Migrating Data from Authoritative ledger_entries Table ---
+INSERT 0 892
+--- 3. Verifying Total Row Counts (Original vs Partitioned) ---
+ original_rows 
+---------------
+           892
+(1 row)
+
+ partitioned_rows 
+------------------
+              892
+(1 row)
+
+--- 4. Row Distribution Across the 4 Shards ---
+   shard_name   | shard_rows 
+----------------+------------
+ ledger_shard_0 |        304
+ ledger_shard_1 |        484
+ ledger_shard_2 |         12
+ ledger_shard_3 |         92
+(4 rows)
+
+--- 5. EXPLAIN Plan with Shard Key: WHERE account_id = 1 (Proves Partition Pruning) ---
+                                                     QUERY PLAN                                                      
+---------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on ledger_shard_0 ledger_entries_sharded (actual time=0.043..0.044 rows=20 loops=1)
+   Recheck Cond: (account_id = 1)
+   Heap Blocks: exact=1
+   ->  Bitmap Index Scan on ledger_shard_0_account_id_entry_timestamp_idx (actual time=0.031..0.031 rows=20 loops=1)
+         Index Cond: (account_id = 1)
+ Planning Time: 0.308 ms
+ Execution Time: 0.071 ms
+(7 rows)
+
+--- 6. EXPLAIN Plan without Shard Key: WHERE transaction_id = 10 (Proves Scatter-Gather Across All Shards) ---
+                                                  QUERY PLAN                                                  
+--------------------------------------------------------------------------------------------------------------
+ Append (actual time=0.004..0.015 rows=2 loops=1)
+   ->  Bitmap Heap Scan on ledger_shard_0 ledger_entries_sharded_1 (actual time=0.004..0.004 rows=1 loops=1)
+         Recheck Cond: (transaction_id = 10)
+         Heap Blocks: exact=1
+         ->  Bitmap Index Scan on ledger_shard_0_transaction_id_idx (actual time=0.003..0.003 rows=1 loops=1)
+               Index Cond: (transaction_id = 10)
+   ->  Bitmap Heap Scan on ledger_shard_1 ledger_entries_sharded_2 (actual time=0.005..0.005 rows=0 loops=1)
+         Recheck Cond: (transaction_id = 10)
+         ->  Bitmap Index Scan on ledger_shard_1_transaction_id_idx (actual time=0.002..0.003 rows=0 loops=1)
+               Index Cond: (transaction_id = 10)
+   ->  Bitmap Heap Scan on ledger_shard_2 ledger_entries_sharded_3 (actual time=0.003..0.003 rows=1 loops=1)
+         Recheck Cond: (transaction_id = 10)
+         Heap Blocks: exact=1
+         ->  Bitmap Index Scan on ledger_shard_2_transaction_id_idx (actual time=0.001..0.001 rows=1 loops=1)
+               Index Cond: (transaction_id = 10)
+   ->  Bitmap Heap Scan on ledger_shard_3 ledger_entries_sharded_4 (actual time=0.002..0.002 rows=0 loops=1)
+         Recheck Cond: (transaction_id = 10)
+         ->  Bitmap Index Scan on ledger_shard_3_transaction_id_idx (actual time=0.001..0.002 rows=0 loops=1)
+               Index Cond: (transaction_id = 10)
+ Planning Time: 0.072 ms
+ Execution Time: 0.080 ms
+(21 rows)
+
+================================================================================
+SHARDING DEMONSTRATION COMPLETE
+================================================================================

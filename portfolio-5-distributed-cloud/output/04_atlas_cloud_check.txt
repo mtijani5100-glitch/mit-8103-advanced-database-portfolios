@@ -1,0 +1,20 @@
+================================================================================
+PORTFOLIO 5: CLOUD DATABASE REPLICA SET & WRITE CONCERN VERIFICATION
+================================================================================
+[Notice] Connected to Standalone MongoDB instance (local dev environment).
+         To evaluate cloud multi-node behavior, pass ATLAS_URI pointing to MongoDB Atlas M0 3-node cluster.
+
+--- Testing Cloud Write Concern (w: majority) ---
+PASS: Insert confirmed with writeConcern: { w: 'majority' } (acknowledged: true)
+      Document inserted with _id: 6ae121716eec2f296c9828a4
+
+--- Testing Read Preference (readPref: secondary) ---
+PASS: Successfully routed read query using readPreference: 'secondaryPreferred'
+      Retrieved document: {"_id":"6ae121716eec2f296c9828a4","test_id":"CLOUD-SYNC-001","description":"Proof of majority write quorum across cloud availability zones","timestamp":"2026-10-27T22:10:57.806Z"}
+
+--- Testing Read Concern (majority) ---
+PASS: Successfully read document with readConcern: 'majority' (guaranteed durable data)
+
+================================================================================
+CLOUD REPLICA SET VERIFICATION COMPLETE
+================================================================================

@@ -148,32 +148,73 @@ PORTFOLIO 4: NOSQL AND ADVANCED DATA MODELS
    - Tijani_Mubarak_301915100_P4_SQLvsNoSQLRationale.md: Comparative matrix, authoritative balance vs event projections, CAP/PACELC theorem evaluation, and Transactional Outbox Pattern design.
    - Tijani_Mubarak_301915100_P4_README.md: Execution guide and screenshot runbook for mongosh and Node.js test runners.
 
-151: 2. Seed Dataset, Rubric Scripts & Log Outputs:
-152:    - Tijani_Mubarak_301915100_P4_Events_Seed.json: 20 synthetic Nigerian fintech transaction events with polymorphic metadata.
-153:    - Tijani_Mubarak_301915100_P4_01_SchemaValidation.js: MongoDB schema validation for 3 collections (kyc_profiles, audit_events, login_sessions) with deliberate code 121 rejection.
-154:    - Tijani_Mubarak_301915100_P4_02_SeedData.js: Document ingestion script seeding 5,000 KYC profiles and 25,000 audit events.
-155:    - Tijani_Mubarak_301915100_P4_03_CrudAndAggregation.js: CRUD operations ($elemMatch, $set/$push, delete) and 4 aggregations including $lookup and $size.
-156:    - Tijani_Mubarak_301915100_P4_04_IndexesExplain.js: Index tuning, before/after explain() measurements, unique index code 11000 proof, TTL index, and partial index.
-157:    - Tijani_Mubarak_301915100_P4_Output_03_CrudAndAggregation.txt: Execution log output of CRUD operations and 4 aggregation pipelines.
-158:    - Tijani_Mubarak_301915100_P4_Output_04_IndexesExplain.txt: Execution log output of before/after explain() performance metrics and constraint proofs.
-159:    - Tijani_Mubarak_301915100_P4_01_SetupCollection.js: MongoDB collection creation with $jsonSchema validation and 5 strategic indexes.
-160:    - Tijani_Mubarak_301915100_P4_02_SeedEvents.js: Document ingestion script with BSON types.
-161:    - Tijani_Mubarak_301915100_P4_03_QueriesAndAggregations.js: Queries (Q1-Q3) and Aggregation Pipelines (Agg1-Agg3) for customer feeds, lifecycle lookups, failure distribution, channel turnover, and fraud detection.
-162:    - Tijani_Mubarak_301915100_P4_04_OutboxPattern.js: Transactional outbox idempotent upsert consumer simulation.
-163:    - Tijani_Mubarak_301915100_P4_RunLab.js: Standalone zero-dependency Node.js execution engine.
-164: 
-165: 3. Visual Execution Evidence:
-166:    - Tijani_Mubarak_301915100_P4_01_schema_validation.png: Proof of 3 collections initialized and deliberate bad insert rejected with code 121.
-167:    - Tijani_Mubarak_301915100_P4_02_seed_verification.png: Terminal verification showing 5,000 KYC profiles and 25,000 audit events ingested.
-168:    - Tijani_Mubarak_301915100_P4_03_crud_output.png: Execution of CREATE, READ ($elemMatch), UPDATE ($set/$push), and DELETE operations.
-169:    - Tijani_Mubarak_301915100_P4_08_compass_indexes.png: MongoDB Compass GUI showing compound indexes and idx_partial_high_risk_fraud partial index.
-170:    - Tijani_Mubarak_301915100_P4_01_Schema_and_Indexes.png: Schema validator and index creation output.
-171:    - Tijani_Mubarak_301915100_P4_02_Seed_Documents_Ingested.png: Ingestion confirmation for 20 event documents.
-172:    - Tijani_Mubarak_301915100_P4_03_Query_Customer_Activity.png: Paginated customer activity feed using idx_customer_timeline.
-173:    - Tijani_Mubarak_301915100_P4_04_Query_Lifecycle_Lookup.png: Point lookup by transaction_ref showing full lifecycle progression.
-174:    - Tijani_Mubarak_301915100_P4_05_Query_Failed_Diagnostics.png: Diagnostic filter for failed transfers displaying error codes.
-175:    - Tijani_Mubarak_301915100_P4_06_Agg_Failure_Distribution.png: Aggregation pipeline grouping failed volume by reason and channel (also available as _06c_).
-176:    - Tijani_Mubarak_301915100_P4_07_Agg_Channel_Turnover.png: Multi-channel volume, total turnover, and average latency breakdown (stages _07a_, _07b_, _07c_).
-177:    - Tijani_Mubarak_301915100_P4_08_Agg_Fraud_Security.png: Fraud detection flagging risk scores >= 0.70 and impossible travel anomaly.
-178:    - Tijani_Mubarak_301915100_P4_09_Outbox_Idempotent_Replay.png: Outbox pattern duplicate delivery rejection proof.
+2. Seed Dataset, Rubric Scripts & Log Outputs:
+   - Tijani_Mubarak_301915100_P4_Events_Seed.json: 20 synthetic Nigerian fintech transaction events with polymorphic metadata.
+   - Tijani_Mubarak_301915100_P4_01_SchemaValidation.js: MongoDB schema validation for 3 collections (kyc_profiles, audit_events, login_sessions) with deliberate code 121 rejection.
+   - Tijani_Mubarak_301915100_P4_02_SeedData.js: Document ingestion script seeding 5,000 KYC profiles and 25,000 audit events.
+   - Tijani_Mubarak_301915100_P4_03_CrudAndAggregation.js: CRUD operations ($elemMatch, $set/$push, delete) and 4 aggregations including $lookup and $size.
+   - Tijani_Mubarak_301915100_P4_04_IndexesExplain.js: Index tuning, before/after explain() measurements, unique index code 11000 proof, TTL index, and partial index.
+   - Tijani_Mubarak_301915100_P4_Output_03_CrudAndAggregation.txt: Execution log output of CRUD operations and 4 aggregation pipelines.
+   - Tijani_Mubarak_301915100_P4_Output_04_IndexesExplain.txt: Execution log output of before/after explain() performance metrics and constraint proofs.
+   - Tijani_Mubarak_301915100_P4_01_SetupCollection.js: MongoDB collection creation with $jsonSchema validation and 5 strategic indexes.
+   - Tijani_Mubarak_301915100_P4_02_SeedEvents.js: Document ingestion script with BSON types.
+   - Tijani_Mubarak_301915100_P4_03_QueriesAndAggregations.js: Queries (Q1-Q3) and Aggregation Pipelines (Agg1-Agg3) for customer feeds, lifecycle lookups, failure distribution, channel turnover, and fraud detection.
+   - Tijani_Mubarak_301915100_P4_04_OutboxPattern.js: Transactional outbox idempotent upsert consumer simulation.
+   - Tijani_Mubarak_301915100_P4_RunLab.js: Standalone zero-dependency Node.js execution engine.
+
+3. Visual Execution Evidence:
+   - Tijani_Mubarak_301915100_P4_01_schema_validation.png: Proof of 3 collections initialized and deliberate bad insert rejected with code 121.
+   - Tijani_Mubarak_301915100_P4_02_seed_verification.png: Terminal verification showing 5,000 KYC profiles and 25,000 audit events ingested.
+   - Tijani_Mubarak_301915100_P4_03_crud_output.png: Execution of CREATE, READ ($elemMatch), UPDATE ($set/$push), and DELETE operations.
+   - Tijani_Mubarak_301915100_P4_08_compass_indexes.png: MongoDB Compass GUI showing compound indexes and idx_partial_high_risk_fraud partial index.
+   - Tijani_Mubarak_301915100_P4_01_Schema_and_Indexes.png: Schema validator and index creation output.
+   - Tijani_Mubarak_301915100_P4_02_Seed_Documents_Ingested.png: Ingestion confirmation for 20 event documents.
+   - Tijani_Mubarak_301915100_P4_03_Query_Customer_Activity.png: Paginated customer activity feed using idx_customer_timeline.
+   - Tijani_Mubarak_301915100_P4_04_Query_Lifecycle_Lookup.png: Point lookup by transaction_ref showing full lifecycle progression.
+   - Tijani_Mubarak_301915100_P4_05_Query_Failed_Diagnostics.png: Diagnostic filter for failed transfers displaying error codes.
+   - Tijani_Mubarak_301915100_P4_06_Agg_Failure_Distribution.png: Aggregation pipeline grouping failed volume by reason and channel (also available as _06c_).
+   - Tijani_Mubarak_301915100_P4_07_Agg_Channel_Turnover.png: Multi-channel volume, total turnover, and average latency breakdown (stages _07a_, _07b_, _07c_).
+   - Tijani_Mubarak_301915100_P4_08_Agg_Fraud_Security.png: Fraud detection flagging risk scores >= 0.70 and impossible travel anomaly.
+   - Tijani_Mubarak_301915100_P4_09_Outbox_Idempotent_Replay.png: Outbox pattern duplicate delivery rejection proof.
+
+================================================================================
+PORTFOLIO 5: DISTRIBUTED AND CLOUD DATABASE EXERCISE
+================================================================================
+1. Architecture, Scaling & Reliability Documents:
+   - Tijani_Mubarak_301915100_P5_Architecture.mmd: End-to-end cloud reference architecture diagram (client channels -> API gateway & router -> PostgreSQL primary & read replica -> outbox CDC -> MongoDB cluster).
+   - Tijani_Mubarak_301915100_P5_ReplicationAndFailover.md: Primary vs standby roles, synchronous vs asynchronous replication trade-offs, stale-read hazards on spendable balances, and split-brain fencing.
+   - Tijani_Mubarak_301915100_P5_ShardingPartitioning.md: Single-node table partitioning vs horizontal multi-node sharding, cross-shard 2PC challenges, and architectural justification for retaining a single primary.
+   - Tijani_Mubarak_301915100_P5_AvailabilityConsistencyRecovery.md: CAP/PACELC decisions, design-target RPO (< 1 min) and RTO (< 15 min), continuous WAL archiving, Point-in-Time Recovery (PITR), and telemetry alerting thresholds.
+   - Tijani_Mubarak_301915100_P5_README.md: Execution runbook and screenshot evidence guidelines.
+
+2. Topology, SQL & Simulation Scripts:
+   - Tijani_Mubarak_301915100_P5_DockerCompose.yml: Multi-node Docker Compose topology orchestrating PostgreSQL 16 Primary (port 5433) and Streaming Read Replica (port 5434).
+   - Tijani_Mubarak_301915100_P5_PrimaryInitReplication.sh: Primary initialization configuring replicator role and physical replication slot replica1_slot.
+   - Tijani_Mubarak_301915100_P5_ReplicaEntrypoint.sh: Standby entrypoint executing automated pg_basebackup and launching streaming recovery.
+   - Tijani_Mubarak_301915100_P5_01_PrimaryChecks.sql: Primary node replication health and slot status verification script.
+   - Tijani_Mubarak_301915100_P5_02_ReplicaChecks.sql: Standby replica health check and read-only enforcement test script.
+   - Tijani_Mubarak_301915100_P5_03_Partitioning.sql: Declarative hash-partitioned ledger table with 4 physical shards and EXPLAIN partition pruning verification.
+   - Tijani_Mubarak_301915100_P5_04_AtlasCloudCheck.js: MongoDB Atlas 3-node replica set verification script testing w: majority write concern and secondaryPreferred read preference.
+   - Tijani_Mubarak_301915100_P5_ReadRoutingSimulator.js: Node.js lag-aware connection router simulator demonstrating Primary mutation routing and stale-read overdraft mitigation.
+   - Tijani_Mubarak_301915100_P5_BackupRestoreDrill.sh: Automated backup, disaster recovery target provisioning, restoration, and 100% reconciliation audit proof.
+
+3. Execution Outputs:
+   - Tijani_Mubarak_301915100_P5_Output_01_PrimaryChecks.txt: Execution log of primary recovery status and active replication slot.
+   - Tijani_Mubarak_301915100_P5_Output_02_ReplicaChecks.txt: Execution log of replica streaming status and read-only write rejection error.
+   - Tijani_Mubarak_301915100_P5_Output_03_Partitioning.txt: Execution log of hash partitioning row counts, partition pruning, and scatter-gather query plans.
+   - Tijani_Mubarak_301915100_P5_Output_04_AtlasCloudCheck.txt: Execution log of cloud replica set write concern and read preference tests.
+
+4. Visual Execution Evidence:
+   - Tijani_Mubarak_301915100_P5_01_docker_ps.png: Docker ps showing lsdb-pg-primary (healthy, port 5433) and lsdb-pg-replica (port 5434).
+   - Tijani_Mubarak_301915100_P5_02_row_counts.png: Verification of identical ledger row counts (892) across primary and standby replica.
+   - Tijani_Mubarak_301915100_P5_03_primary_checks.png: Primary health check showing is_replica = f and active physical slot replica1_slot.
+   - Tijani_Mubarak_301915100_P5_04_replica_checks.png: Standby health check showing is_replica = t and read-only write block (ERROR 25006).
+   - Tijani_Mubarak_301915100_P5_05_stale_read.png: Live replication lag proof showing primary count = 4, replica count = 3, and caught_up = f.
+   - Tijani_Mubarak_301915100_P5_06_caught_up.png: Replica catch-up proof after resuming WAL replay showing caught_up = t.
+   - Tijani_Mubarak_301915100_P5_07_sync_hang.png: Synchronous replication hang proof when standby replica is stopped (CAP availability trade-off).
+   - Tijani_Mubarak_301915100_P5_08_sync_warning.png: PostgreSQL cancellation warning proving transaction committed locally but un-replicated.
+   - Tijani_Mubarak_301915100_P5_09_partitioning.png: 4-shard hash partitioning showing partition pruning on account_id vs scatter-gather on transaction_id.
+   - Tijani_Mubarak_301915100_P5_10_failover.png: Manual failover drill promoting replica via pg_promote(), sequence jump, and accepting writes.
+   - Tijani_Mubarak_301915100_P5_11_own_work.png: Student's own work showing lag-aware router overdraft prevention and 100% DR restore reconciliation.
+
 

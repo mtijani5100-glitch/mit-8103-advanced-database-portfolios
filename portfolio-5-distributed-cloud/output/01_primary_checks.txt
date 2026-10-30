@@ -1,0 +1,35 @@
+================================================================================
+PRIMARY NODE REPLICATION HEALTH CHECK
+================================================================================
+--- Check 1: Primary Recovery Status (Expect is_replica = f) ---
+ is_replica 
+------------
+ f
+(1 row)
+
+--- Check 2: Active Streaming Replication Connections ---
+ application_name | client_addr |   state   | sync_state | sync_priority | sent_lsn  | write_lsn | flush_lsn | replay_lsn | replay_lag_bytes 
+------------------+-------------+-----------+------------+---------------+-----------+-----------+-----------+------------+------------------
+ walreceiver      | 172.18.0.3  | streaming | async      |             0 | 0/31B2D30 | 0/31B2D30 | 0/31B2D30 | 0/31B2D30  |                0
+(1 row)
+
+--- Check 3: Replication Slots Status (Expect active = t for replica1_slot) ---
+   slot_name   | plugin | slot_type | active | wal_status 
+---------------+--------+-----------+--------+------------
+ replica1_slot |        | physical  | t      | reserved
+(1 row)
+
+--- Check 4: Primary Write Readiness & Table Counts ---
+ total_accounts 
+----------------
+             31
+(1 row)
+
+ total_ledger_entries 
+----------------------
+                  892
+(1 row)
+
+================================================================================
+PRIMARY HEALTH CHECK COMPLETE
+================================================================================

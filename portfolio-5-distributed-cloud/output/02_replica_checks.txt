@@ -1,0 +1,31 @@
+================================================================================
+STANDBY REPLICA HEALTH CHECK & READ-ONLY ENFORCEMENT
+================================================================================
+--- Check 1: Standby Recovery Status (Expect is_replica = t) ---
+ is_replica 
+------------
+ t
+(1 row)
+
+--- Check 2: WAL Receiver Status (Expect status = streaming) ---
+  status   | receive_start_lsn | written_lsn | flushed_lsn |      last_msg_send_time       |     last_msg_receipt_time     | latest_end_lsn |   slot_name   
+-----------+-------------------+-------------+-------------+-------------------------------+-------------------------------+----------------+---------------
+ streaming | 0/3000000         | 0/31B2D30   | 0/31B2D30   | 2026-10-28 21:09:37.329613+00 | 2026-10-28 21:09:37.329715+00 | 0/31B2D30      | replica1_slot
+(1 row)
+
+--- Check 3: Read Verification on Standby (Eventual Consistency Read) ---
+ total_accounts 
+----------------
+             31
+(1 row)
+
+ total_ledger_entries 
+----------------------
+                  892
+(1 row)
+
+--- Check 4: Read-Only Enforcement (Intentional Write Rejection) ---
+Expected: ERROR: cannot execute UPDATE in a read-only transaction
+================================================================================
+REPLICA HEALTH CHECK COMPLETE
+================================================================================

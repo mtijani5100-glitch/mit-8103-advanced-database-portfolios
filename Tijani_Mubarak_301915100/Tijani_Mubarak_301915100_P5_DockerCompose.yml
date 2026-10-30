@@ -1,0 +1,66 @@
+version: '3.8'
+
+# MIT 8103 Portfolio 5: Distributed and Cloud Databases Topology
+# Student: Mubarak Tijani (ID: 301915100)
+# Case Study: LedgerSpring Digital Bank (LSDB)
+
+services:
+  # 1. Authoritative Primary Node (Read/Write OLTP Leader)
+  primary:
+    image: postgres:16-alpine
+    container_name: lsdb-pg-primary
+    environment:
+      POSTGRES_DB: ledgerspring_db
+      POSTGRES_USER: ledgerspring
+      POSTGRES_PASSWORD: ledgerspring_pass
+    ports:
+      - "5433:5432"
+    command: >
+      postgres 
+      -c wal_level=replica 
+      -c max_wal_senders=10 
+      -c max_replication_slots=10 
+      -c hot_standby=on
+    volumes:
+      - primary_data:/var/lib/postgresql/data
+      - ./primary-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ledgerspring -d ledgerspring_db"]
+      interval: 4s
+      timeout: 5s
+      retries: 10
+    networks:
+      - lsdb-net
+
+  # 2. Streaming Read-Only Standby Replica (Eventual Consistency Follower)
+  replica:
+    image: postgres:16-alpine
+    container_name: lsdb-pg-replica
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      PRIMARY_HOST: lsdb-pg-primary
+      PRIMARY_PORT: 5432
+      REPL_USER: replicator
+      REPL_PASS: replicator_pass
+    ports:
+      - "5434:5432"
+    volumes:
+      - replica_data:/var/lib/postgresql/data
+      - ./replica-entrypoint.sh:/replica-entrypoint.sh:ro
+    entrypoint: ["/bin/sh", "/replica-entrypoint.sh"]
+    depends_on:
+      primary:
+        condition: service_healthy
+    networks:
+      - lsdb-net
+
+volumes:
+  primary_data:
+    name: lsdb_primary_vol
+  replica_data:
+    name: lsdb_replica_vol
+
+networks:
+  lsdb-net:
+    name: lsdb_cluster_net
+    driver: bridge
