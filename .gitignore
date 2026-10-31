@@ -21,3 +21,6 @@ ledgerspring_dump.sql
 # Editor and operating system artifacts
 .idea/
 *.zip
+
+# Internal development notes & implementation playbooks
+mit-8103-banking-fintech-implementation-approach.md

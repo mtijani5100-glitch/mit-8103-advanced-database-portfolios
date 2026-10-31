@@ -64,7 +64,7 @@ PORTFOLIO 2: QUERY PROCESSING AND OPTIMISATION
 1. Benchmark Analysis & Documentation:
    - Tijani_Mubarak_301915100_P2_README.md: Portfolio 2 implementation overview and instructions.
    - Tijani_Mubarak_301915100_P2_PerformanceResults.md: Technical report detailing Cost-Based Optimizer
-     (CBO) formulas, small-table economics, buffer reads, and index lifecycle trade-offs.
+     (CBO) formulas, Section 3.1 planner cost-delta table (55% aggregate cost reduction), small-table economics, buffer reads, and index lifecycle trade-offs.
 
 2. Benchmark & Indexing Scripts:
    - Tijani_Mubarak_301915100_P2_BaselinePlans.sql: Automated capture of baseline execution plans.
@@ -101,7 +101,7 @@ PORTFOLIO 2: QUERY PROCESSING AND OPTIMISATION
 PORTFOLIO 3: TRANSACTIONS AND CONCURRENCY
 ================================================================================
 1. Architecture, Analysis & Execution Guide:
-   - Tijani_Mubarak_301915100_P3_ConcurrencyAnalysis.md: In-depth analysis of row-level locking (SELECT FOR UPDATE), deadlock avoidance via deterministic sorting, isolation level semantics (READ COMMITTED vs REPEATABLE READ), and idempotency design.
+   - Tijani_Mubarak_301915100_P3_ConcurrencyAnalysis.md: In-depth analysis of row-level locking (SELECT FOR UPDATE), deadlock avoidance via deterministic sorting, isolation level semantics (READ COMMITTED, REPEATABLE READ, and Section 3.4 SERIALIZABLE write-skew live demo), and idempotency design.
    - Tijani_Mubarak_301915100_P3_README.md: Execution order and multi-session concurrency testing instructions.
 
 2. SQL & Stress Testing Scripts:
@@ -191,7 +191,7 @@ PORTFOLIO 5: DISTRIBUTED AND CLOUD DATABASE EXERCISE
    - Tijani_Mubarak_301915100_P5_ReplicationAndFailover.md: Primary vs standby roles, synchronous vs asynchronous replication trade-offs, stale-read hazards on spendable balances, and split-brain fencing.
    - Tijani_Mubarak_301915100_P5_ShardingPartitioning.md: Single-node table partitioning vs horizontal multi-node sharding, cross-shard 2PC challenges, and architectural justification for retaining a single primary.
    - Tijani_Mubarak_301915100_P5_AvailabilityConsistencyRecovery.md: CAP/PACELC decisions, design-target RPO (< 1 min) and RTO (< 15 min), continuous WAL archiving, Point-in-Time Recovery (PITR), and telemetry alerting thresholds.
-   - Tijani_Mubarak_301915100_P5_README.md: Execution runbook and screenshot evidence guidelines.
+   - Tijani_Mubarak_301915100_P5_README.md: Execution runbook, Docker vs local-psql dual-instance environment note, and screenshot evidence guidelines.
 
 2. Topology, SQL & Simulation Scripts:
    - Tijani_Mubarak_301915100_P5_DockerCompose.yml: Multi-node Docker Compose topology orchestrating PostgreSQL 16 Primary (port 5433) and Streaming Read Replica (port 5434).
