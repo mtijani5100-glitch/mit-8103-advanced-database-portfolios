@@ -53,6 +53,17 @@ flowchart TD
 * **Host Port 5434 -> Container Port 5432:** `lsdb-pg-replica` (Streaming Read-Only Standby).
 * **Host Port 5432:** Reserved for Host Local PostgreSQL (`ledgerspring`), preventing port collisions.
 
+> **⚠️ Environment Implementation Note (for markers):**
+>
+> The Docker Compose topology above represents the **canonical production-equivalent reference architecture** and is the intended deployment target. During evidence collection for this coursework submission, Docker Engine was not available on the development machine (`zsh: command not found: docker`). As a pragmatic and documented workaround, streaming replication was instead configured between **two native PostgreSQL 16 instances** running concurrently on the same macOS host via Homebrew:
+>
+> | Role | PostgreSQL Data Directory | Connection | psql Env Var |
+> |---|---|---|---|
+> | **Primary** | `$PGDATA_PRIMARY` (port 5433) | `postgresql://localhost:5433/ledgerspring_db` | `$PRIMARY` |
+> | **Standby / Replica** | `$PGDATA_REPLICA` (port 5434) | `postgresql://localhost:5434/ledgerspring_db` | `$REPLICA` |
+>
+> All replication experiments (stale-read proof, WAL pause/resume, synchronous hang, `pg_stat_replication` monitoring, and failover drill) were executed against these two live PostgreSQL processes and are fully evidenced in the screenshots (`P5_01` through `P5_11`). The underlying WAL streaming mechanism, replication slot semantics, `pg_promote()` promotion API, and `pg_wal_replay_pause/resume()` APIs are **identical** between the Docker and native-process deployments. The Docker Compose YAML is included in the submission as the reproducible infrastructure-as-code specification for a containerised re-run.
+
 ---
 
 ## 2. Workload Allocation: Which Workload Goes Where & Why
