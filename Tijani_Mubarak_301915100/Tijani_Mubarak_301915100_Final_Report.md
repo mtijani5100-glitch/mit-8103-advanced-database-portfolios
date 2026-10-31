@@ -96,6 +96,7 @@ A naive approach of indexing every column degrades write performance through ind
 
 ### 3.3 Empirical Benchmark Results
 Empirical evaluation before and after index implementation demonstrated dramatic performance improvements across all queries:
+- **Planner Total Cost Delta:** Baseline aggregate total cost reduced from 33.87 to 15.25 across all 10 queries (**55% aggregate planner cost reduction** documented in Section 3.1 of Portfolio 2).
 - **Shared Buffer Reads:** Reduced by **85% to 98%**, replacing full sequential heap scans with selective B-tree Index Scans.
 - **Execution Latencies:** Operational lookup queries dropped from multi-millisecond disk-bound scans to **sub-0.1ms memory-cached index lookups**.
 - **Query 07 (Reconciliation):** Execution time dropped from 4.82ms to 0.38ms (**92.1% latency reduction**).
@@ -125,7 +126,7 @@ Because all concurrent sessions acquire locks in identical global order, circula
 ### 4.3 Isolation Level Analysis & Concurrency Benchmarking
 - **`READ COMMITTED` (Engine Default):** Vulnerable to non-repeatable reads and phantom reads during long-running reporting queries.
 - **`REPEATABLE READ`:** Uses Multi-Version Concurrency Control (MVCC) snapshots to ensure stable point-in-time reads. Aborts transactions attempting concurrent modifications on the same snapshot with serialization failure (`40001`), requiring application-level retries.
-- **`SERIALIZABLE`:** Complete theoretical serializability via Serializable Snapshot Isolation (SSI), detecting rw-antidependency cycles.
+- **`SERIALIZABLE`:** Complete serializable execution via Serializable Snapshot Isolation (SSI), detecting rw-antidependency cycles. Empirically demonstrated in Portfolio 3 (§3.4) via a two-session write-skew scenario triggering engine rejection with `ERROR: could not serialize access due to concurrent update (SQLSTATE 40001)` and evaluated against `SELECT ... FOR UPDATE` row locking.
 - **Concurrency Stress Testing (`pgbench`):** Executed a 10-client concurrent stress test across 500 rapid transactions. The engine achieved **378.4 TPS** with zero deadlocks, zero lock timeouts, and post-benchmark automated reconciliation confirming 100% data parity and **0.00 kobo drift**.
 
 ---
@@ -156,7 +157,7 @@ Direct dual-writing from application code to both PostgreSQL and MongoDB is inhe
 ## 6. Portfolio 5: Distributed Systems, High Availability, Partitioning, & Cloud Topologies
 
 ### 6.1 Multi-Node Streaming Replication Topology
-Portfolio 5 provisioned a multi-container distributed topology in Docker Compose:
+Portfolio 5 provisioned a distributed multi-node streaming replication topology (specified in Docker Compose and executed via two native PostgreSQL 16 Homebrew instances on ports 5433 and 5434 for local macOS execution):
 - **`lsdb-pg-primary` (Port 5433):** Primary read-write node configured with write-ahead logging level `replica`, 10 max WAL senders, and physical replication slots (`replica1_slot`).
 - **`lsdb-pg-replica` (Port 5434):** Hot standby read replica continuously streaming and applying WAL records via `pg_basebackup` stream initialization.
 

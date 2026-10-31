@@ -3,7 +3,7 @@
 **Course:** MIT 8103 Advanced Database Systems  
 **Weight:** 7 Marks  
 **Author:** Mubarak Tijani (`mtijani5100-glitch`)  
-**Institution:** Department of Computer Sciences, University of Lagos  
+**Institution:** Miva Open University  
 **Case Study:** LedgerSpring Digital Bank (LSDB) — Core Banking & Double-Entry Ledger System  
 **Database Engine:** PostgreSQL 16.13 (Homebrew) on Apple Silicon macOS  
 
